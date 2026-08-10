@@ -1,0 +1,53 @@
+/**
+ * DESI GYM / देसी जिम - Main Application Entrypoint
+ */
+
+import { initCaptionRotation } from './captions.js';
+import { initPresence } from './presence.js';
+import { initPlayer } from './player.js';
+
+// Initialize Live Local Clock
+function initClock() {
+  const clockEl = document.getElementById('clock');
+  if (!clockEl) return;
+
+  function updateClock() {
+    const now = new Date();
+    let hours = now.getHours();
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    
+    hours = hours % 12;
+    hours = hours ? hours : 12; // convert 0 to 12
+    const formattedHours = String(hours).padStart(2, '0');
+
+    clockEl.textContent = `${formattedHours}:${minutes} ${ampm}`;
+    clockEl.setAttribute('datetime', now.toISOString());
+  }
+
+  updateClock();
+  setInterval(updateClock, 1000);
+}
+
+// Initialize Application when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  // 1. Clock
+  initClock();
+
+  // 2. Presence
+  const liveCountEl = document.getElementById('live-user-count');
+  initPresence(liveCountEl);
+
+  // 3. Captions
+  const captionEl = document.getElementById('caption');
+  initCaptionRotation(captionEl);
+
+  // 4. Radio Player
+  initPlayer({
+    playBtnId: 'play-btn',
+    progressBarId: 'player-progress',
+    progressFillId: 'player-progress-fill',
+    titleId: 'player-title',
+    subtitleId: 'player-subtitle'
+  });
+});

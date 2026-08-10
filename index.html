@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>देसी जिम | DESI GYM RADIO</title>
+  
+  <meta name="description" content="Indian gym culture + Gen-Z internet culture + underground music radio. देसी जिम fullscreen interactive music experience.">
+  <meta name="theme-color" content="#120B08">
+
+  <!-- Google Fonts: Yatra One for Main Title, Rozha One & Birthstone for Caption, Plus Jakarta Sans for UI -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Birthstone&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Rozha+One&family=Yatra+One&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+  <!-- Fullscreen Interactive Hero Container -->
+  <main class="hero-container" id="hero">
+    
+    <!-- Animated Background Image Wrapper -->
+    <div class="hero-bg-wrapper">
+      <div class="hero-bg" aria-hidden="true"></div>
+    </div>
+
+    <!-- Atmospheric Burnt-Orange Overlays -->
+    <div class="atmosphere-layer" aria-hidden="true">
+      <div class="atmosphere-glow glow-1"></div>
+      <div class="atmosphere-glow glow-2"></div>
+      <div class="vignette"></div>
+    </div>
+
+    <!-- Film Grain / Noise Overlay -->
+    <div class="grain-overlay" aria-hidden="true"></div>
+
+    <!-- Top Header Overlay Bar -->
+    <header class="top-bar fade-in-step-1">
+      <div class="top-bar-left">
+        <!-- Live Local Clock -->
+        <time class="clock-display" id="clock" datetime="">00:00 AM</time>
+      </div>
+      <div class="top-bar-right">
+        <!-- Live Users Indicator -->
+        <div class="live-indicator" id="live-indicator">
+          <span class="live-dot" aria-hidden="true"></span>
+          <span class="live-text" id="live-user-count">127 on the grind</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Center Hero Typography & Caption -->
+    <section class="hero-content">
+      <!-- Main Hindi Typography -->
+      <h1 class="main-title fade-in-step-2" lang="hi">
+        <span class="title-line">देसी</span>
+        <span class="title-space"> </span>
+        <span class="title-line">जिम</span>
+      </h1>
+      
+      <!-- Sub-caption (Gen-Z Desi Gym Humor with Rozha One & Birthstone Fonts) -->
+      <p class="caption-text fade-in-step-3" id="caption"><span class="font-hi">भाई</span> <span class="font-hi">आज</span> <span class="font-en">leg</span> <span class="font-en">day</span> <span class="font-hi">है</span></p>
+    </section>
+
+    <!-- Custom Translucent Music Player Capsule -->
+    <footer class="player-wrapper fade-in-step-4">
+      <div class="music-player" role="region" aria-label="Desi Gym Radio Player">
+        
+        <!-- Track Thumbnail -->
+        <div class="player-thumb-wrapper">
+          <picture>
+            <source media="(max-width: 768px)" srcset="/images/hero-mobile.webp">
+            <img src="/images/hero-desktop.webp" alt="Desi Gym Radio" class="player-thumb">
+          </picture>
+        </div>
+
+        <!-- Track & Playlist Meta -->
+        <div class="player-meta">
+          <span class="player-title" id="player-title">देसी जिम RADIO</span>
+          <span class="player-subtitle" id="player-subtitle">Gym Playlist</span>
+          
+          <!-- Seekable Progress Bar -->
+          <div class="player-progress-bar" id="player-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" tabindex="0" aria-label="Track progress">
+            <div class="player-progress-fill" id="player-progress-fill"></div>
+          </div>
+        </div>
+
+        <!-- Circular Play / Pause Control -->
+        <button type="button" class="play-btn" id="play-btn" aria-label="Play music">
+          <!-- Play Icon -->
+          <svg class="play-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <polygon points="7,4 20,12 7,20"></polygon>
+          </svg>
+          <!-- Pause Icon -->
+          <svg class="pause-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" style="display: none;">
+            <rect x="6" y="4" width="4" height="16" rx="1"></rect>
+            <rect x="14" y="4" width="4" height="16" rx="1"></rect>
+          </svg>
+        </button>
+
+      </div>
+    </footer>
+
+  </main>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
