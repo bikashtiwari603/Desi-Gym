@@ -110,6 +110,7 @@ html, body {
   inset: 0;
   z-index: 2;
   pointer-events: none;
+  overflow: hidden;
 }
 
 .atmosphere-glow {
@@ -118,55 +119,83 @@ html, body {
   width: 100%;
   height: 100%;
   will-change: opacity, transform;
+  filter: blur(40px);
+  -webkit-filter: blur(40px);
 }
 
-.glow-1 {
+/* Lower 30% Primary Drift Field - Burnt Orange & Deep Terracotta */
+.glow-lower-1 {
   background: radial-gradient(
-    ellipse at 25% 85%,
-    rgba(224, 75, 25, 0.32),
-    transparent 60%
+    ellipse 120% 45% at 25% 100%,
+    rgba(184, 58, 36, 0.22) 0%,
+    rgba(143, 47, 31, 0.14) 40%,
+    rgba(111, 36, 27, 0.06) 65%,
+    transparent 85%
   );
-  animation: glowPulse1 14s ease-in-out infinite alternate;
+  animation: glowLiquidDrift1 22s ease-in-out infinite alternate;
 }
 
-.glow-2 {
+/* Lower 30% Secondary Drift Field - Warm Red & Subtle Amber */
+.glow-lower-2 {
   background: radial-gradient(
-    ellipse at 78% 22%,
-    rgba(195, 55, 20, 0.22),
-    transparent 55%
+    ellipse 130% 40% at 75% 102%,
+    rgba(212, 90, 42, 0.18) 0%,
+    rgba(168, 59, 39, 0.12) 42%,
+    rgba(224, 106, 50, 0.05) 68%,
+    transparent 88%
   );
-  animation: glowPulse2 18s ease-in-out infinite alternate;
+  animation: glowLiquidDrift2 26s ease-in-out infinite alternate;
+}
+
+/* Subtle Cursor Fluid Glow (Lower region interaction) */
+.glow-lower-mouse {
+  background: radial-gradient(
+    ellipse 60vw 25vh at var(--mouse-x, 50%) var(--mouse-y, 92%),
+    rgba(224, 106, 50, 0.13) 0%,
+    rgba(168, 59, 39, 0.07) 45%,
+    transparent 75%
+  );
+  transition: opacity 0.5s ease-out;
+  opacity: 0.85;
 }
 
 .vignette {
   position: absolute;
   inset: 0;
   background: radial-gradient(
-    circle at center,
-    transparent 40%,
-    rgba(12, 7, 5, 0.45) 100%
+    circle at center 40%,
+    transparent 45%,
+    rgba(12, 7, 5, 0.38) 100%
   );
 }
 
-@keyframes glowPulse1 {
+@keyframes glowLiquidDrift1 {
   0% {
-    opacity: 0.7;
+    opacity: 0.75;
     transform: scale(1) translate(0, 0);
   }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.04) translate(-1.5%, -1%);
+  }
   100% {
-    opacity: 1;
-    transform: scale(1.1) translate(-2%, -2%);
+    opacity: 0.70;
+    transform: scale(1.02) translate(1%, -1.5%);
   }
 }
 
-@keyframes glowPulse2 {
+@keyframes glowLiquidDrift2 {
   0% {
-    opacity: 0.6;
-    transform: scale(1) translate(0, 0);
+    opacity: 0.70;
+    transform: scale(1.02) translate(0, 0);
+  }
+  50% {
+    opacity: 0.90;
+    transform: scale(1.05) translate(1.5%, -1%);
   }
   100% {
-    opacity: 0.95;
-    transform: scale(1.08) translate(2%, 2%);
+    opacity: 0.65;
+    transform: scale(1) translate(-1%, -0.5%);
   }
 }
 

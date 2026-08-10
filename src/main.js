@@ -50,4 +50,29 @@ document.addEventListener('DOMContentLoaded', () => {
     titleId: 'player-title',
     subtitleId: 'player-subtitle'
   });
+
+  // 5. Lower Atmosphere Subtle Mouse Interaction
+  initAtmosphereInteraction();
 });
+
+// Initialize Subtle Lower Atmosphere Cursor Interaction
+function initAtmosphereInteraction() {
+  const hero = document.getElementById('hero');
+  if (!hero) return;
+
+  let ticking = false;
+  window.addEventListener('mousemove', (e) => {
+    if (ticking) return;
+    ticking = true;
+
+    requestAnimationFrame(() => {
+      const xPct = Math.round((e.clientX / window.innerWidth) * 100);
+      const rawY = (e.clientY / window.innerHeight) * 100;
+      const yPct = Math.round(75 + (rawY * 0.25));
+
+      hero.style.setProperty('--mouse-x', `${xPct}%`);
+      hero.style.setProperty('--mouse-y', `${yPct}%`);
+      ticking = false;
+    });
+  }, { passive: true });
+}
