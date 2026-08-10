@@ -448,6 +448,48 @@ html, body {
   transition: width 0.1s linear;
 }
 
+.player-controls {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.control-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--color-cream-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease, background-color 0.2s ease;
+}
+
+.control-btn:hover {
+  color: var(--color-cream);
+  background: rgba(255, 255, 255, 0.08);
+  transform: scale(1.08);
+}
+
+.control-btn:active {
+  transform: scale(0.92);
+}
+
+.control-btn:focus-visible {
+  outline: 2px solid var(--color-cream-muted);
+  outline-offset: 2px;
+}
+
+.shuffle-btn.active {
+  color: var(--color-burnt-orange);
+  background: rgba(224, 75, 25, 0.16);
+}
+
 .play-btn {
   flex-shrink: 0;
   width: 42px;

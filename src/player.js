@@ -1,17 +1,15 @@
 /**
  * DESI GYM - Underground Music Radio Player
- * YouTube IFrame Player API Integration Architecture
+ * YouTube IFrame Player API Integration Architecture with Shuffle & Next Track Support
  */
 
-// =========================================================================
-// CONFIGURATION
-// Replace with your YouTube Playlist ID or Video ID when ready
-// =========================================================================
 export const YOUTUBE_PLAYLIST_ID = 'RDCLAK5uy_k8jOtApFm8GvDPerBiJwOLRi7f1jVI9WE'; // YouTube Music Desi Gym Radio Playlist
 
 class RadioPlayer {
   constructor() {
     this.isPlaying = false;
+    this.isShuffled = false;
+    this.isFirstPlay = true;
     this.player = null;
     this.isApiReady = false;
     this.progressInterval = null;
@@ -20,6 +18,8 @@ class RadioPlayer {
 
     // DOM Elements
     this.playBtn = null;
+    this.shuffleBtn = null;
+    this.nextBtn = null;
     this.playIcon = null;
     this.pauseIcon = null;
     this.progressBar = null;
@@ -28,8 +28,10 @@ class RadioPlayer {
     this.subtitleEl = null;
   }
 
-  init({ playBtnId, progressBarId, progressFillId, titleId, subtitleId }) {
+  init({ playBtnId, shuffleBtnId, nextBtnId, progressBarId, progressFillId, titleId, subtitleId }) {
     this.playBtn = document.getElementById(playBtnId);
+    this.shuffleBtn = document.getElementById(shuffleBtnId);
+    this.nextBtn = document.getElementById(nextBtnId);
     this.progressBar = document.getElementById(progressBarId);
     this.progressFill = document.getElementById(progressFillId);
     this.titleEl = document.getElementById(titleId);
@@ -47,6 +49,16 @@ class RadioPlayer {
   bindEvents() {
     // Play / Pause Toggle
     this.playBtn.addEventListener('click', () => this.togglePlay());
+
+    // Shuffle Button Toggle
+    if (this.shuffleBtn) {
+      this.shuffleBtn.addEventListener('click', () => this.toggleShuffle());
+    }
+
+    // Next Button Trigger
+    if (this.nextBtn) {
+      this.nextBtn.addEventListener('click', () => this.nextTrack());
+    }
 
     // Progress Bar Click Seek
     if (this.progressBar) {
@@ -71,7 +83,6 @@ class RadioPlayer {
   }
 
   createYouTubePlayer() {
-    // Hidden container for YouTube iframe
     let container = document.getElementById('yt-player-container');
     if (!container) {
       container = document.createElement('div');
@@ -90,12 +101,16 @@ class RadioPlayer {
     container.appendChild(playerDiv);
 
     try {
+      // Pick a random starting index for each site load (0 to 19)
+      const randomStartIndex = Math.floor(Math.random() * 20);
+
       this.player = new window.YT.Player('yt-player', {
         height: '1',
         width: '1',
         playerVars: {
           listType: 'playlist',
           list: YOUTUBE_PLAYLIST_ID,
+          index: randomStartIndex,
           autoplay: 0,
           controls: 0,
           disablekb: 1,
@@ -106,10 +121,18 @@ class RadioPlayer {
         events: {
           onReady: () => {
             this.isApiReady = true;
+            // Enable shuffle by default so every visit feels fresh
+            try {
+              if (typeof this.player.setShuffle === 'function') {
+                this.player.setShuffle(true);
+                this.isShuffled = true;
+                this.updateShuffleUI();
+              }
+            } catch(e) {}
           },
           onStateChange: (event) => this.onPlayerStateChange(event),
           onError: () => {
-            console.log('YouTube playlist fallback activated');
+            console.log('YouTube player fallback activated');
           }
         }
       });
@@ -132,6 +155,23 @@ class RadioPlayer {
 
     if (this.isApiReady && this.player && typeof this.player.playVideo === 'function') {
       try {
+        // If first play of session, play a random index in playlist
+        if (this.isFirstPlay) {
+          this.isFirstPlay = false;
+          if (typeof this.player.setShuffle === 'function') {
+            this.player.setShuffle(true);
+            this.isShuffled = true;
+            this.updateShuffleUI();
+          }
+          if (typeof this.player.playVideoAt === 'function') {
+            const playlistLength = (typeof this.player.getPlaylist === 'function' && this.player.getPlaylist()) ? this.player.getPlaylist().length : 25;
+            const randomIndex = Math.floor(Math.random() * (playlistLength || 25));
+            this.player.playVideoAt(randomIndex);
+            this.startProgressTracker();
+            return;
+          }
+        }
+
         this.player.playVideo();
       } catch (e) {
         this.startFallbackTimer();
@@ -156,16 +196,58 @@ class RadioPlayer {
     this.stopProgressTracker();
   }
 
+  toggleShuffle() {
+    this.isShuffled = !this.isShuffled;
+    this.updateShuffleUI();
+
+    if (this.isApiReady && this.player && typeof this.player.setShuffle === 'function') {
+      try {
+        this.player.setShuffle(this.isShuffled);
+      } catch (e) {}
+    }
+  }
+
+  updateShuffleUI() {
+    if (this.shuffleBtn) {
+      if (this.isShuffled) {
+        this.shuffleBtn.classList.add('active');
+        this.shuffleBtn.setAttribute('title', 'Shuffle ON');
+      } else {
+        this.shuffleBtn.classList.remove('active');
+        this.shuffleBtn.setAttribute('title', 'Shuffle OFF');
+      }
+    }
+  }
+
+  nextTrack() {
+    if (this.isApiReady && this.player && typeof this.player.nextVideo === 'function') {
+      try {
+        this.player.nextVideo();
+        if (!this.isPlaying) {
+          this.isPlaying = true;
+          this.updateUI();
+        }
+      } catch (e) {
+        this.simulatedTime = 0;
+      }
+    } else {
+      this.simulatedTime = 0;
+      if (this.progressFill) {
+        this.progressFill.style.width = '0%';
+      }
+    }
+  }
+
   onPlayerStateChange(event) {
     // YT.PlayerState.PLAYING = 1, PAUSED = 2, ENDED = 0
     if (event.data === 1) {
       this.isPlaying = true;
       this.updateUI();
-      // Try fetching video title if available
-      if (this.player.getVideoData) {
+      // Fetch track title
+      if (this.player && typeof this.player.getVideoData === 'function') {
         const data = this.player.getVideoData();
         if (data && data.title && this.titleEl) {
-          this.titleEl.textContent = data.title.length > 28 ? data.title.slice(0, 25) + '...' : data.title;
+          this.titleEl.textContent = data.title.length > 26 ? data.title.slice(0, 24) + '...' : data.title;
         }
       }
     } else if (event.data === 2 || event.data === 0) {
@@ -204,6 +286,14 @@ class RadioPlayer {
       const current = this.player.getCurrentTime() || 0;
       const duration = this.player.getDuration() || 1;
       percent = Math.min(100, (current / duration) * 100);
+      
+      // Keep title updated if changed dynamically
+      if (this.player.getVideoData) {
+        const data = this.player.getVideoData();
+        if (data && data.title && this.titleEl && this.titleEl.textContent === 'देसी जिम RADIO') {
+          this.titleEl.textContent = data.title.length > 26 ? data.title.slice(0, 24) + '...' : data.title;
+        }
+      }
     } else {
       this.simulatedTime += 0.5;
       if (this.simulatedTime > this.simulatedDuration) {
@@ -218,7 +308,6 @@ class RadioPlayer {
   }
 
   startFallbackTimer() {
-    // If external audio blocked or offline, visual timer ensures UX works seamlessly
     if (!this.progressInterval) {
       this.startProgressTracker();
     }
