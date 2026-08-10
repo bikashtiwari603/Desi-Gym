@@ -7,7 +7,7 @@
 // CONFIGURATION
 // Replace with your YouTube Playlist ID or Video ID when ready
 // =========================================================================
-export const YOUTUBE_PLAYLIST_ID = 'PL4fGSI1pDJn6O1LS0XSdF3RyO0Aq_E-mE'; // Default Gym / Lofi / Underground Vibe Playlist Placeholder
+export const YOUTUBE_PLAYLIST_ID = 'RDCLAK5uy_k8jOtApFm8GvDPerBiJwOLRi7f1jVI9WE'; // YouTube Music Desi Gym Radio Playlist
 
 class RadioPlayer {
   constructor() {
