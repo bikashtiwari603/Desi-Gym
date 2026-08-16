@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 4. Radio Player
   initPlayer({
+    playerContainerId: 'music-player',
     playBtnId: 'play-btn',
     shuffleBtnId: 'shuffle-btn',
     nextBtnId: 'next-btn',
