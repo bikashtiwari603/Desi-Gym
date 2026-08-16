@@ -53,7 +53,16 @@ document.addEventListener('DOMContentLoaded', () => {
     subtitleId: 'player-subtitle'
   });
 
-  // 5. Lower Atmosphere Subtle Mouse Interaction
+  // 5. Register Service Worker for Instant Caching & Fast Loading
+  if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch((err) => {
+        console.debug('ServiceWorker registration optional:', err);
+      });
+    });
+  }
+
+  // 6. Lower Atmosphere Subtle Mouse Interaction
   initAtmosphereInteraction();
 });
 

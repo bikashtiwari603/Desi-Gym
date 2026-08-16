@@ -1,24 +1,40 @@
 <!DOCTYPE html>
 <html lang="hi">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>देसी जिम | DESI GYM RADIO</title>
-  
-  <meta name="description" content="Indian gym culture + Gen-Z internet culture + underground music radio. देसी जिम fullscreen interactive music experience.">
+
+  <meta name="description"
+    content="Indian gym culture + Gen-Z internet culture + underground music radio. देसी जिम fullscreen interactive music experience.">
   <meta name="theme-color" content="#120B08">
 
-  <!-- Google Fonts: Yatra One for Main Title, Rozha One & Birthstone for Caption, Plus Jakarta Sans for UI -->
+  <!-- Performance & Preconnect Directives -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Birthstone&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Rozha+One&family=Yatra+One&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://www.youtube.com">
+  <link rel="preconnect" href="https://www.google.com">
+  <link rel="preconnect" href="https://i.ytimg.com">
+  <link rel="dns-prefetch" href="https://www.youtube.com">
+  <link rel="dns-prefetch" href="https://i.ytimg.com">
+
+  <!-- Preload Critical Hero Background Images -->
+  <link rel="preload" as="image" href="/images/hero-desktop.webp" media="(min-width: 769px)" fetchpriority="high">
+  <link rel="preload" as="image" href="/images/hero-mobile.webp" media="(max-width: 768px)" fetchpriority="high">
+
+  <!-- Google Fonts: Yatra One for Main Title, Rozha One & Birthstone for Caption, Plus Jakarta Sans for UI -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Birthstone&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Rozha+One&family=Yatra+One&display=swap"
+    rel="stylesheet">
 
   <link rel="stylesheet" href="/src/style.css">
 </head>
+
 <body>
   <!-- Fullscreen Interactive Hero Container -->
   <main class="hero-container" id="hero">
-    
+
     <!-- Animated Background Image Wrapper -->
     <div class="hero-bg-wrapper">
       <div class="hero-bg" aria-hidden="true"></div>
@@ -58,15 +74,17 @@
         <span class="title-space"> </span>
         <span class="title-line">जिम</span>
       </h1>
-      
+
       <!-- Sub-caption (Gen-Z Desi Gym Humor with Rozha One & Birthstone Fonts) -->
-      <p class="caption-text fade-in-step-3" id="caption"><span class="font-hi">भाई</span> <span class="font-hi">आज</span> <span class="font-en">leg</span> <span class="font-en">day</span> <span class="font-hi">है</span></p>
+      <p class="caption-text fade-in-step-3" id="caption"><span class="font-hi">भाई</span> <span
+          class="font-hi">आज</span> <span class="font-en">leg</span> <span class="font-en">day</span> <span
+          class="font-hi">है</span></p>
     </section>
 
     <!-- Custom Translucent Music Player Capsule -->
     <footer class="player-wrapper fade-in-step-4">
       <div class="music-player" role="region" aria-label="Desi Gym Radio Player">
-        
+
         <!-- Track Thumbnail -->
         <div class="player-thumb-wrapper">
           <picture>
@@ -79,9 +97,10 @@
         <div class="player-meta">
           <span class="player-title" id="player-title">देसी जिम RADIO</span>
           <span class="player-subtitle" id="player-subtitle">Gym Playlist</span>
-          
+
           <!-- Seekable Progress Bar -->
-          <div class="player-progress-bar" id="player-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" tabindex="0" aria-label="Track progress">
+          <div class="player-progress-bar" id="player-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0"
+            aria-valuemax="100" tabindex="0" aria-label="Track progress">
             <div class="player-progress-fill" id="player-progress-fill"></div>
           </div>
         </div>
@@ -89,8 +108,10 @@
         <!-- Controls Group (Shuffle, Play/Pause, Next) -->
         <div class="player-controls">
           <!-- Shuffle Button -->
-          <button type="button" class="control-btn shuffle-btn" id="shuffle-btn" aria-label="Shuffle playlist" title="Shuffle playlist">
-            <svg class="shuffle-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <button type="button" class="control-btn shuffle-btn" id="shuffle-btn" aria-label="Shuffle playlist"
+            title="Shuffle playlist">
+            <svg class="shuffle-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
+              stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="16 3 21 3 21 8"></polyline>
               <line x1="4" y1="20" x2="21" y2="3"></line>
               <polyline points="21 16 21 21 16 21"></polyline>
@@ -106,7 +127,8 @@
               <polygon points="7,4 20,12 7,20"></polygon>
             </svg>
             <!-- Pause Icon -->
-            <svg class="pause-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" style="display: none;">
+            <svg class="pause-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"
+              style="display: none;">
               <rect x="6" y="4" width="4" height="16" rx="1"></rect>
               <rect x="14" y="4" width="4" height="16" rx="1"></rect>
             </svg>
@@ -128,4 +150,5 @@
 
   <script type="module" src="/src/main.js"></script>
 </body>
+
 </html>

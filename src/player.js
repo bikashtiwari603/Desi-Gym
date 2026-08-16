@@ -101,8 +101,8 @@ class RadioPlayer {
     container.appendChild(playerDiv);
 
     try {
-      // Pick a random starting index for each site load (0 to 19)
-      const randomStartIndex = Math.floor(Math.random() * 20);
+      // Pick a random starting index for each site load (0 to 24)
+      const randomStartIndex = Math.floor(Math.random() * 25);
 
       this.player = new window.YT.Player('yt-player', {
         height: '1',
@@ -155,17 +155,16 @@ class RadioPlayer {
 
     if (this.isApiReady && this.player && typeof this.player.playVideo === 'function') {
       try {
-        // If first play of session, play a random index in playlist
+        // If first play of session, ensure shuffle is applied and play
         if (this.isFirstPlay) {
           this.isFirstPlay = false;
           if (typeof this.player.setShuffle === 'function') {
-            this.player.setShuffle(true);
-            this.isShuffled = true;
-            this.updateShuffleUI();
+            this.player.setShuffle(this.isShuffled);
           }
           if (typeof this.player.playVideoAt === 'function') {
-            const playlistLength = (typeof this.player.getPlaylist === 'function' && this.player.getPlaylist()) ? this.player.getPlaylist().length : 25;
-            const randomIndex = Math.floor(Math.random() * (playlistLength || 25));
+            const playlist = (typeof this.player.getPlaylist === 'function' && this.player.getPlaylist()) || [];
+            const count = playlist && playlist.length > 0 ? playlist.length : 25;
+            const randomIndex = Math.floor(Math.random() * count);
             this.player.playVideoAt(randomIndex);
             this.startProgressTracker();
             return;
@@ -212,21 +211,23 @@ class RadioPlayer {
       if (this.isShuffled) {
         this.shuffleBtn.classList.add('active');
         this.shuffleBtn.setAttribute('title', 'Shuffle ON');
+        this.shuffleBtn.setAttribute('aria-pressed', 'true');
       } else {
         this.shuffleBtn.classList.remove('active');
         this.shuffleBtn.setAttribute('title', 'Shuffle OFF');
+        this.shuffleBtn.setAttribute('aria-pressed', 'false');
       }
     }
   }
 
   nextTrack() {
+    this.isFirstPlay = false;
     if (this.isApiReady && this.player && typeof this.player.nextVideo === 'function') {
       try {
         this.player.nextVideo();
-        if (!this.isPlaying) {
-          this.isPlaying = true;
-          this.updateUI();
-        }
+        this.isPlaying = true;
+        this.updateUI();
+        this.startProgressTracker();
       } catch (e) {
         this.simulatedTime = 0;
       }
@@ -239,20 +240,33 @@ class RadioPlayer {
   }
 
   onPlayerStateChange(event) {
-    // YT.PlayerState.PLAYING = 1, PAUSED = 2, ENDED = 0
+    // YT.PlayerState.PLAYING = 1, PAUSED = 2, ENDED = 0, BUFFERING = 3
     if (event.data === 1) {
       this.isPlaying = true;
       this.updateUI();
-      // Fetch track title
-      if (this.player && typeof this.player.getVideoData === 'function') {
-        const data = this.player.getVideoData();
-        if (data && data.title && this.titleEl) {
-          this.titleEl.textContent = data.title.length > 26 ? data.title.slice(0, 24) + '...' : data.title;
-        }
-      }
+      this.startProgressTracker();
+      // Fetch track title & artist
+      this.updateTrackMetadata();
     } else if (event.data === 2 || event.data === 0) {
       this.isPlaying = false;
       this.updateUI();
+    } else if (event.data === 3) {
+      this.updateTrackMetadata();
+    }
+  }
+
+  updateTrackMetadata() {
+    if (this.player && typeof this.player.getVideoData === 'function') {
+      const data = this.player.getVideoData();
+      if (data && data.title) {
+        if (this.titleEl) {
+          this.titleEl.textContent = data.title.length > 28 ? data.title.slice(0, 26) + '...' : data.title;
+          this.titleEl.setAttribute('title', data.title);
+        }
+        if (data.author && this.subtitleEl) {
+          this.subtitleEl.textContent = data.author;
+        }
+      }
     }
   }
 
